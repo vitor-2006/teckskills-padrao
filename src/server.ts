@@ -1,10 +1,6 @@
-import express, {Request, Response} from 'express'
+import { app } from './app'
+import { config } from './config/env'
 
-const app = express();
-const port: number = 3000;
-
-app.use(express.json());
-	
-app.listen(port, () => {
-    console.log("Api iniciada na porta: " + port);
-});
+app.listen(config.app_port, () => {
+    console.log(`Servidor "${config.app_name}" iniciado na porta ${config.app_port}`)
+})
