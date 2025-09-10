@@ -1,30 +1,18 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
 import { routes } from './routes/routes'
-import morgan from 'morgan'
-import fs from 'fs'
-import path from 'path'
+import cors from 'cors'
+import { log } from "./middleware/log.middleware"
+import { errorHandling } from './middleware/error-handling.middleware'
 
 const app: Express = express()
 
-const filelog  =fs.createWriteStream(path.join(__dirname, 'storage', 'access.log'), { flags: 'a'})
-
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-
-app.use(morgan('combined', {stream: filelog}))
+app.use(log)
+app.use(errorHandling)
 
 //configuração das rotas
 app.use(routes)
-
-//tentativa de erro
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    if(err){
-        return res.status(400).json({
-            msg: 'Ocorreu um problema!',
-            error: err.message
-        })
-    }
-    next()
-})
 
 export { app }
