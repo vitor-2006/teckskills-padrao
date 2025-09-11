@@ -10,9 +10,15 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(log)
-app.use(errorHandling)
 
 //configuração das rotas
 app.use(routes)
 
+import { database } from './database/database';
+
+(async () => {
+    console.log(await database.query('select now() as data_atual', []));
+})();
+
+app.use(errorHandling)
 export { app }
